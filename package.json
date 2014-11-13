@@ -1,0 +1,30 @@
+{
+    "author": "Michael Truog <mjtruog@gmail.com> (https://github.com/okeuday)",
+    "name": "erlang_js",
+    "description": "Erlang Binary Term Format for Javascript",
+    "version": "0.1.0",
+    "homepage": "https://github.com/okeuday/erlang_js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/okeuday/erlang_js.git"
+    },
+    "license": "BSD",
+    "keywords": [
+        "cloud",
+        "erlang",
+        "fault tolerance",
+        "actor",
+        "service",
+        "soa"
+    ],
+    "main": "Erlang.js",
+    "scripts": {
+        "test": "node tests/ErlangTests.js"
+    },
+    "dependencies": {},
+    "devDependencies": {},
+    "optionalDependencies": {},
+    "engines": {
+        "node": "*"
+    }
+}
