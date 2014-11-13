@@ -72,13 +72,13 @@ var TAG_SMALL_ATOM_UTF8_EXT = 119;
 
 var toNativeString = {}.toString;
 var packUint16 = function(value) { // big endian
-    return String.fromCharCode((value >> 8) & 0xFF) +
+    return String.fromCharCode((value >>> 8) & 0xFF) +
            String.fromCharCode(value & 0xFF);
 };
 var packUint32 = function(value) { // big endian
-    return String.fromCharCode((value >> 24) & 0xFF) +
-           String.fromCharCode((value >> 16) & 0xFF) +
-           String.fromCharCode((value >> 8) & 0xFF) +
+    return String.fromCharCode((value >>> 24) & 0xFF) +
+           String.fromCharCode((value >>> 16) & 0xFF) +
+           String.fromCharCode((value >>> 8) & 0xFF) +
            String.fromCharCode(value & 0xFF);
 };
 var unpackUint16 = function(i, data) { // big endian

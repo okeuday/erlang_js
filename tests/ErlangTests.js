@@ -40,7 +40,7 @@
 //
 
 var Erlang = require('./../Erlang.js').Erlang; 
-var assert = require("assert");
+var assert = require('assert');
 
 // many of the test cases were adapted
 // from erlport (https://github.com/hdima/erlport)
