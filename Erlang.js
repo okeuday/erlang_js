@@ -350,6 +350,7 @@ this.binary_to_term = function binary_to_term (data, callback) {
             i += 4;
             var data_compressed = data.substr(i);
             var j = data_compressed.length;
+            var _binary_to_term = this._binary_to_term;
             uncompress(data_compressed, function(data_uncompressed) {
                 if (typeof data_uncompressed != 'string') {
                     callback(data_uncompressed);
