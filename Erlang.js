@@ -464,14 +464,20 @@ Erlang._binary_to_term = function _binary_to_term (i, data) {
     i += 1;
     switch (tag) {
         case TAG_NEW_FLOAT_EXT:
-            var value = new DataView(new Buffer([data.charCodeAt(i),
-                                                 data.charCodeAt(i + 1),
-                                                 data.charCodeAt(i + 2),
-                                                 data.charCodeAt(i + 3),
-                                                 data.charCodeAt(i + 4),
-                                                 data.charCodeAt(i + 5),
-                                                 data.charCodeAt(i + 6),
-                                                 data.charCodeAt(i + 7)]));
+            var buffer = new ArrayBuffer(8);
+            var view = new Uint8Array(buffer);
+            for (var offset = 0; offset < 8; ++offset) {
+                view[offset] = data.charCodeAt(i + offset)
+            }
+            var value = new DataView(buffer);
+//            var value = new DataView(new Buffer([data.charCodeAt(i),
+//                                                 data.charCodeAt(i + 1),
+//                                                 data.charCodeAt(i + 2),
+//                                                 data.charCodeAt(i + 3),
+//                                                 data.charCodeAt(i + 4),
+//                                                 data.charCodeAt(i + 5),
+//                                                 data.charCodeAt(i + 6),
+//                                                 data.charCodeAt(i + 7)]));
             return [i + 8, value.getFloat64(0)];
         case TAG_BIT_BINARY_EXT:
             var j = unpackUint32(i, data);
@@ -889,11 +895,13 @@ Erlang._bignum_bit_length = function _bignum_bit_length (bignum) {
 };
 
 Erlang._float_to_binary = function _float_to_binary (term) {
-    var value = new DataView(new Buffer(8));
+    var buffer = new ArrayBuffer(8);
+    var value = new DataView(buffer);
     value.setFloat64(0, term);
+    var view = new Uint8Array(buffer);
     var result = '';
-    for (var i = 0; i < 8; i++) {
-        result += String.fromCharCode(value.buffer[i]);
+    for (var offset = 0; offset < 8; offset++) {
+        result += String.fromCharCode(view[offset]);
     }
     return String.fromCharCode(TAG_NEW_FLOAT_EXT) + result;
 };
