@@ -470,14 +470,6 @@ Erlang._binary_to_term = function _binary_to_term (i, data) {
                 view[offset] = data.charCodeAt(i + offset)
             }
             var value = new DataView(buffer);
-//            var value = new DataView(new Buffer([data.charCodeAt(i),
-//                                                 data.charCodeAt(i + 1),
-//                                                 data.charCodeAt(i + 2),
-//                                                 data.charCodeAt(i + 3),
-//                                                 data.charCodeAt(i + 4),
-//                                                 data.charCodeAt(i + 5),
-//                                                 data.charCodeAt(i + 6),
-//                                                 data.charCodeAt(i + 7)]));
             return [i + 8, value.getFloat64(0)];
         case TAG_BIT_BINARY_EXT:
             var j = unpackUint32(i, data);
