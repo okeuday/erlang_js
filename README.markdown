@@ -7,6 +7,8 @@ Provides all encoding and decoding for the Erlang Binary Term Format
 (as defined at [http://erlang.org/doc/apps/erts/erl_ext_dist.html](http://erlang.org/doc/apps/erts/erl_ext_dist.html))
 in a single Javascript file.
 
+Available as a [npm package at `https://www.npmjs.org/package/erlang_js`](https://www.npmjs.org/package/erlang_js).
+
 Tests
 -----
 
