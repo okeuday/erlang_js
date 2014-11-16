@@ -74,21 +74,21 @@ var TAG_ATOM_UTF8_EXT = 118;
 var TAG_SMALL_ATOM_UTF8_EXT = 119;
 
 var toNativeString = {}.toString;
-var packUint16 = function(value) { // big endian
-    return String.fromCharCode((value >>> 8) & 0xFF) +
-           String.fromCharCode(value & 0xFF);
+var packUint16 = function packUint16 (value) { // big endian
+    return String.fromCharCode((value >>> 8) & 0xff) +
+           String.fromCharCode(value & 0xff);
 };
-var packUint32 = function(value) { // big endian
-    return String.fromCharCode((value >>> 24) & 0xFF) +
-           String.fromCharCode((value >>> 16) & 0xFF) +
-           String.fromCharCode((value >>> 8) & 0xFF) +
-           String.fromCharCode(value & 0xFF);
+var packUint32 = function packUint32 (value) { // big endian
+    return String.fromCharCode((value >>> 24) & 0xff) +
+           String.fromCharCode((value >>> 16) & 0xff) +
+           String.fromCharCode((value >>> 8) & 0xff) +
+           String.fromCharCode(value & 0xff);
 };
-var unpackUint16 = function(i, data) { // big endian
+var unpackUint16 = function unpackUint16 (i, data) { // big endian
     return (data.charCodeAt(i) << 8) |
            data.charCodeAt(i + 1);
 };
-var unpackUint32 = function(i, data) { // big endian
+var unpackUint32 = function unpackUint32 (i, data) { // big endian
     return (data.charCodeAt(i) << 24) |
            (data.charCodeAt(i + 1) << 16) |
            (data.charCodeAt(i + 2) << 8) |
