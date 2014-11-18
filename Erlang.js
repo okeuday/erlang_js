@@ -206,7 +206,7 @@ Erlang.OtpErlangList = function OtpErlangList (value, improper) {
     this.improper = typeof improper !== 'undefined' ? improper : false;
 };
 Erlang.OtpErlangList.prototype.binary = function() {
-    if (typeof this.value == 'object' &&
+    if (typeof this.value === 'object' &&
         toNativeString.call(this.value) == '[object Array]') {
         var length = this.value.length;
         var elements = '';
@@ -327,7 +327,8 @@ Erlang.OtpErlangMap = function OtpErlangMap (value) {
     this.value = value;
 };
 Erlang.OtpErlangMap.prototype.binary = function() {
-    if (toNativeString.call(this.value) == '[object Object]') {
+    if (typeof this.value === 'object' &&
+        toNativeString.call(this.value) == '[object Object]') {
         return Erlang._object_to_binary(this.value);
     }
     else {
@@ -339,75 +340,78 @@ Erlang.OtpErlangMap.prototype.toString = function() {
 };
 
 Erlang.binary_to_term = function binary_to_term (data, callback) {
-    if (typeof data != 'string') {
-        callback(new ParseException('not bytes input'),
-                 undefined);
-        return;
-    }
-    var size = data.length;
-    if (size <= 1) {
-        callback(new ParseException('null input'),
-                 undefined);
-        return;
-    }
-    if (data.charCodeAt(0) != TAG_VERSION) {
-        callback(new ParseException('invalid version'),
-                 undefined);
-        return;
-    }
     try {
+        if (typeof data != 'string') {
+            throw new ParseException('not bytes input');
+        }
+        var size = data.length;
+        if (size <= 1) {
+            throw new ParseException('null input');
+        }
+        if (data.charCodeAt(0) != TAG_VERSION) {
+            throw new ParseException('invalid version');
+        }
         if (TAG_COMPRESSED_ZLIB == data.charCodeAt(1)) {
             if (size <= 6) {
-                callback(new ParseException('null compressed input'),
-                         undefined);
-                return;
+                throw new ParseException('null compressed input');
             }
             var i = 2;
             var size_uncompressed = unpackUint32(i, data);
             if (size_uncompressed == 0) {
-                callback(new ParseException('compressed data null'),
-                         undefined);
-                return;
+                throw new ParseException('compressed data null');
             }
             i += 4;
             var data_compressed = data.substr(i);
             var j = data_compressed.length;
             uncompress(data_compressed, function(data_uncompressed) {
                 if (typeof data_uncompressed != 'string') {
-                    callback(data_uncompressed, undefined);
+                    process.nextTick(function () {
+                        callback(data_uncompressed, undefined);
+                    });
                 }
                 else {
                     if (size_uncompressed != data_uncompressed.length) {
-                        callback(new ParseException('compression corrupt'),
-                                 undefined);
+                        process.nextTick(function () {
+                            callback(new ParseException('compression corrupt'),
+                                     undefined);
+                        });
                         return;
                     }
                     var result = Erlang._binary_to_term(0, data_uncompressed);
                     if (result[0] != size_uncompressed) {
-                        callback(new ParseException('unparsed data'),
-                                 undefined);
+                        process.nextTick(function () {
+                            callback(new ParseException('unparsed data'),
+                                     undefined);
+                        });
                         return;
                     }
-                    callback(undefined, result[1]);
+                    process.nextTick(function () {
+                        callback(undefined, result[1]);
+                    });
                 }
             });
         }
         else {
             var result = Erlang._binary_to_term(1, data);
             if (result[0] != size) {
-                callback(new ParseException('unparsed data'),
-                         undefined);
-                return;
+                throw new ParseException('unparsed data');
             }
-            callback(undefined, result[1]);
+            process.nextTick(function () {
+                callback(undefined, result[1]);
+            });
         }
     }
     catch (e) {
-        var e_new = new ParseException('missing data');
-        if (e.stack) {
-            e_new.stack = e.stack;
+        if (! (e instanceof ParseException)) {
+            var e_new = new ParseException('missing data');
+            if (e.stack) {
+                e_new.stack = e.stack;
+            }
+            e = e_new;
         }
-        callback(e_new, undefined);
+        process.nextTick(function () {
+            callback(e, undefined);
+        });
     }
 };
 
@@ -416,22 +420,20 @@ Erlang.term_to_binary = function term_to_binary (term, callback, compressed) {
     try {
         var data_uncompressed = Erlang._term_to_binary(term);
         if (compressed === false) {
-            callback(undefined,
-                     String.fromCharCode(TAG_VERSION) + data_uncompressed);
+            process.nextTick(function () {
+                callback(undefined,
+                         String.fromCharCode(TAG_VERSION) + data_uncompressed);
+            });
         }
         else {
             if (compressed === true) {
                 compressed = 6;
             }
             else if (compressed < 0 || compressed > 9) {
-                callback(new InputException('compressed in [0..9]'),
-                         undefined);
-                return;
+                throw new InputException('compressed in [0..9]');
             }
             else if (compressed === 0) {
-                callback(new InputException('node.js zlib compressed 0 broken'),
-                         undefined);
-                return;
+                throw new InputException('node.js zlib compressed 0 broken');
             }
             compress(data_uncompressed, compressed, function (data_compressed) {
                 if (typeof data_compressed != 'string') {
@@ -448,14 +450,17 @@ Erlang.term_to_binary = function term_to_binary (term, callback, compressed) {
         }
     }
     catch (e) {
-        if (! (e instanceof OutputException)) {
+        if (! (e instanceof InputException ||
+               e instanceof OutputException)) {
             var e_new = new OutputException(e.toString());
             if (e.stack) {
                 e_new.stack = e.stack;
             }
             e = e_new;
         }
-        callback(e, undefined);
+        process.nextTick(function () {
+            callback(e, undefined);
+        });
     }
 };
 
