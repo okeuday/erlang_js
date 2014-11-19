@@ -56,13 +56,13 @@ Array.prototype.fill = function(value) {
     }
     return this;
 };
-var hex = function hex(binary) {
+var hex = function hex(buffer) {
     var output = '';
-    for (var i = 0; i < binary.length; i++)
+    for (var i = 0; i < buffer.length; i++)
     {
-        var code = binary.charCodeAt(i);
+        var code = buffer[i];
         if (code >= 32 && code <= 126) {
-            output += binary.charAt(i);
+            output += String.fromCharCode(code);
         }
         else {
             var c = code.toString(16);
@@ -72,7 +72,7 @@ var hex = function hex(binary) {
             output += '\\x' + c;
         }
     }
-    return output;      
+    return output;
 };
 
 (function AtomTestCase () {
