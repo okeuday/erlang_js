@@ -397,6 +397,9 @@ Erlang.OtpErlangMap.prototype.toString = function() {
 };
 
 Erlang.binary_to_term = function binary_to_term (data, callback) {
+    if (typeof callback === 'undefined') {
+        throw new InputException('callback required');
+    }
     try {
         if (typeof data === 'string') {
             data = new Buffer(data, 'binary');
@@ -470,6 +473,9 @@ Erlang.binary_to_term = function binary_to_term (data, callback) {
 };
 
 Erlang.term_to_binary = function term_to_binary (term, callback, compressed) {
+    if (typeof callback === 'undefined') {
+        throw new InputException('callback required');
+    }
     compressed = typeof compressed !== 'undefined' ? compressed : false;
     try {
         var data_uncompressed = Erlang._term_to_binary(term);
