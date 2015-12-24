@@ -8,7 +8,7 @@
         "type": "git",
         "url": "git://github.com/okeuday/erlang_js.git"
     },
-    "license": "BSD",
+    "license": "BSD-4-Clause",
     "keywords": [
         "erlang"
     ],
