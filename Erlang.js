@@ -682,7 +682,7 @@ Erlang._binary_to_term = function _binary_to_term (i, data) {
                 throw new ParseException('invalid small integer tag');
             }
             i += 1;
-            var length = data[i];
+            var arity = data[i];
             i += 1;
             return [i,
                     new Erlang.OtpErlangFunction(tag, data.slice(old_i, i))];
