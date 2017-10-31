@@ -1,7 +1,7 @@
 import {Erlang} from "./Erlang";
 import * as arraybufferToBuffer from "arraybuffer-to-buffer";
 
-export function term_to_binary(term, compressed: boolean | Erlang.CompressLevel = true) {
+export function term_to_binary(term, compressed: boolean | Erlang.CompressLevel = true): Promise<Buffer | Uint8Array> {
   return new Promise((resolve, reject) => {
     Erlang.term_to_binary(term, (error, data) => {
       if (error) {
@@ -16,7 +16,7 @@ export function term_to_binary(term, compressed: boolean | Erlang.CompressLevel 
 export function binary_to_term(data: Blob | Buffer | Uint8Array, option: Erlang.Option = "auto_unwrap") {
   return new Promise((resolve, reject) => {
     if (Buffer.isBuffer(data)) {
-      resolve(data)
+      resolve(data);
     } else {
       const reader = new FileReader();
       reader.onload = () => resolve(arraybufferToBuffer(reader.result));
