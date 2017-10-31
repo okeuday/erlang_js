@@ -1,7 +1,7 @@
 {
     "name": "erlang_js",
     "description": "Erlang Binary Term Format for Javascript",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "author": "Michael Truog <mjtruog@gmail.com> (https://github.com/okeuday)",
     "contributors": [
         {
