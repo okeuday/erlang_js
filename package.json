@@ -1,5 +1,5 @@
 {
-    "name": "erlang_js",
+    "name": "@beenotung/erlang_js",
     "description": "Erlang Binary Term Format for Javascript",
     "version": "1.8.2",
     "author": "Michael Truog <mjtruog@gmail.com> (https://github.com/okeuday)",
