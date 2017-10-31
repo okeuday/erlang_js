@@ -27,7 +27,9 @@
         "pretest": "npm run build",
         "test": "node tests/ErlangTests.js"
     },
-    "dependencies": {},
+    "dependencies": {
+        "arraybuffer-to-buffer": "^0.0.4"
+    },
     "devDependencies": {
         "@angular/compiler": "^4.4.6",
         "@angular/core": "^4.4.6",
