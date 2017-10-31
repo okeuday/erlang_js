@@ -25,7 +25,9 @@
         "build": "tsc -p .",
         "lint": "tslint -p .",
         "pretest": "npm run build",
-        "test": "node tests/ErlangTests.js"
+        "test": "node tests/ErlangTests.js",
+        "preversion": "npm run build",
+        "prepublishOnly": "npm test"
     },
     "dependencies": {
         "arraybuffer-to-buffer": "^0.0.4"
