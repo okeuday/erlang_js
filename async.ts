@@ -13,7 +13,7 @@ export function term_to_binary(term, compressed: boolean | Erlang.CompressLevel 
   });
 }
 
-export function binary_to_term(data: Blob | Buffer, option: Erlang.Option = "auto_unwrap") {
+export function binary_to_term(data: Blob | Buffer | Uint8Array, option: Erlang.Option = "auto_unwrap") {
   return new Promise((resolve, reject) => {
     if (Buffer.isBuffer(data)) {
       resolve(data)
