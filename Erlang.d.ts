@@ -17,42 +17,70 @@ export namespace Erlang {
   //  Erlang term objects listed alphabetically
 
   abstract class OtpErlangTerm {
-    public value;
-
     binary(): Buffer;
 
     toString(): string;
   }
 
   export class OtpErlangAtom extends OtpErlangTerm {
-    constructor(value, utf8);
+    public value;
+
+    public utf8: boolean;
+
+    constructor(value, utf8?: boolean);
   }
 
   export class OtpErlangBinary extends OtpErlangTerm {
-    constructor(value, bits);
+    public value;
+
+    public bits: number;
+
+    constructor(value, bits?: number);
   }
 
   export class OtpErlangFunction extends OtpErlangTerm {
+    public tag;
+    public value;
+
     constructor(tag, value);
   }
 
   export class OtpErlangList extends OtpErlangTerm {
-    constructor(value, improper);
+    public value;
+
+    public improper: boolean;
+
+    constructor(value, improper?: boolean);
   }
 
   export class OtpErlangMap extends OtpErlangTerm {
+    public value;
+
     constructor(value);
   }
 
   export class OtpErlangPid extends OtpErlangTerm {
+    public node;
+    public id;
+    public serial;
+    public creation;
+
     constructor(node, id, serial, creation);
   }
 
   export class OtpErlangPort extends OtpErlangTerm {
+    public node;
+    public id;
+    public creation;
+
     constructor(node, id, creation);
   }
 
   export class OtpErlangReference extends OtpErlangTerm {
+    public node;
+    public id;
+    public creation;
+
     constructor(node, id, creation);
   }
 
