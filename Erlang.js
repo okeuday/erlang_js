@@ -400,10 +400,11 @@ Erlang.OtpErlangReference.prototype.toString = function() {
 
 // core functionality
 
-Erlang.binary_to_term = function binary_to_term (data, callback) {
+Erlang.binary_to_term = function binary_to_term (data, callback, option) {
     if (typeof callback === 'undefined') {
         throw new InputException('callback required');
     }
+    option = option || "no_unwrap";
     try {
         if (typeof data === 'string') {
             data = new Buffer(data, 'binary');
@@ -440,7 +441,7 @@ Erlang.binary_to_term = function binary_to_term (data, callback) {
                                  undefined);
                         return;
                     }
-                    var result = Erlang._binary_to_term(0, data_uncompressed);
+                    var result = Erlang._binary_to_term(0, data_uncompressed, option);
                     if (result[0] != size_uncompressed) {
                         callback(new ParseException('unparsed data'),
                                  undefined);
@@ -451,7 +452,7 @@ Erlang.binary_to_term = function binary_to_term (data, callback) {
             });
         }
         else {
-            var result = Erlang._binary_to_term(1, data);
+            var result = Erlang._binary_to_term(1, data, option);
             if (result[0] != size) {
                 throw new ParseException('unparsed data');
             }
@@ -527,7 +528,7 @@ Erlang.term_to_binary = function term_to_binary (term, callback, compressed) {
 
 // binary_to_term implementation functions
 
-Erlang._binary_to_term = function _binary_to_term (i, data) {
+Erlang._binary_to_term = function _binary_to_term (i, data, option) {
     var tag = data[i];
     i += 1;
     switch (tag) {
@@ -600,7 +601,7 @@ Erlang._binary_to_term = function _binary_to_term (i, data) {
                 length = unpackUint32(i, data);
                 i += 4;
             }
-            return Erlang._binary_to_term_sequence(i, length, data);
+            return Erlang._binary_to_term_sequence(i, length, data, option);
         case TAG_NIL_EXT:
             return [i, new Erlang.OtpErlangList([])];
         case TAG_STRING_EXT:
@@ -610,10 +611,10 @@ Erlang._binary_to_term = function _binary_to_term (i, data) {
         case TAG_LIST_EXT:
             var length = unpackUint32(i, data);
             i += 4;
-            var result = Erlang._binary_to_term_sequence(i, length, data);
+            var result = Erlang._binary_to_term_sequence(i, length, data, option);
             i = result[0];
             var tmp = result[1];
-            result = Erlang._binary_to_term(i, data);
+            result = Erlang._binary_to_term(i, data, option);
             i = result[0];
             var tail = result[1];
             if (! (tail instanceof Erlang.OtpErlangList) ||
@@ -703,15 +704,19 @@ Erlang._binary_to_term = function _binary_to_term (i, data) {
             i += 4;
             var pairs = {};
             for (var length_index = 0; length_index < length; length_index++) {
-                var result = Erlang._binary_to_term(i, data);
+                var result = Erlang._binary_to_term(i, data, option);
                 i = result[0];
                 var key = result[1];
-                result = Erlang._binary_to_term(i, data);
+                result = Erlang._binary_to_term(i, data, option);
                 i = result[0];
                 var value = result[1];
                 pairs[key] = value;
             }
-            return [i, new Erlang.OtpErlangMap(pairs)];
+            return [i,
+              option === "auto_unwrap"
+                ? pairs
+                : new Erlang.OtpErlangMap(pairs)
+            ];
         case TAG_FUN_EXT:
             var old_i = i;
             var numfree = unpackUint32(i, data);
@@ -728,7 +733,7 @@ Erlang._binary_to_term = function _binary_to_term (i, data) {
             var result = Erlang._binary_to_integer(i, data);
             i = result[0];
             var uniq = result[1];
-            var result = Erlang._binary_to_term_sequence(i, numfree, data);
+            var result = Erlang._binary_to_term_sequence(i, numfree, data, option);
             i = result[0];
             var free = result[1];
             return [i,
@@ -753,10 +758,10 @@ Erlang._binary_to_term = function _binary_to_term (i, data) {
 };
 
 Erlang._binary_to_term_sequence = function _binary_to_term_sequence
-                                           (i, length, data) {
+                                           (i, length, data, option) {
     var sequence = [];
     for (var length_index = 0; length_index < length; length_index++) {
-        var result = Erlang._binary_to_term(i, data);
+        var result = Erlang._binary_to_term(i, data, option);
         i = result[0];
         sequence.push(result[1]);
     }
@@ -906,7 +911,7 @@ Erlang._string_to_binary = function _string_to_binary (term) {
             var j = 5 + 2 * i;
             buffer[j] = TAG_SMALL_INTEGER_EXT;
             buffer[j + 1] = term.charCodeAt(i);
-        } 
+        }
         buffer[5 + 2 * length] = TAG_NIL_EXT;
         return buffer;
     }
@@ -934,7 +939,7 @@ Erlang._tuple_to_binary = function _tuple_to_binary (term) {
     var buffers = [header];
     for (var i = 0; i < length; i++) {
         buffers.push(Erlang._term_to_binary(term[i]));
-    } 
+    }
     return Buffer.concat(buffers);
 };
 
