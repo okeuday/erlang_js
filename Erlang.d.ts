@@ -88,7 +88,7 @@ export namespace Erlang {
 
   export type CompressLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-  /* to auto unwrap OtpErlangMap or not */
+  /* to auto unwrap OtpErlangMap and OtpErlangBinary or not */
   export type Option = "auto_unwrap" | "no_unwrap";
 
   export function binary_to_term(data, callback, option?: Option);

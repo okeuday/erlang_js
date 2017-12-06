@@ -24,6 +24,7 @@
     "scripts": {
         "build": "tsc -p .",
         "lint": "tslint -p .",
+        "fix": "tslint -p . --fix",
         "pretest": "npm run build",
         "test": "node tests/ErlangTests.js",
         "preversion": "npm run build",

@@ -630,7 +630,9 @@ Erlang._binary_to_term = function _binary_to_term (i, data, option) {
             var j = unpackUint32(i, data);
             i += 4;
             return [i + j,
-                    new Erlang.OtpErlangBinary(data.slice(i, i + j), 8)];
+              option === "auto_unwrap"
+                ? data.slice(i, i + j)
+                : new Erlang.OtpErlangBinary(data.slice(i, i + j), 8)];
         case TAG_SMALL_BIG_EXT:
         case TAG_LARGE_BIG_EXT:
             var j;
