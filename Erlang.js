@@ -28,6 +28,7 @@ exports.Erlang = new function() {
 var Erlang = this; // namespace
 
 var zlib = require('zlib');
+var lib = require('./lib');
 
 // tag values here http://www.erlang.org/doc/apps/erts/erl_ext_dist.html
 var TAG_VERSION = 131;
@@ -884,6 +885,10 @@ Erlang._term_to_binary = function _term_to_binary (term) {
                         return Erlang._object_to_binary(term);
                     }
                 default:
+                    if(term instanceof Uint8Array){
+                        var buf = lib.typedArrayToBuffer(term);
+                        return new Erlang.OtpErlangBinary(buf).binary()
+                    }
                     throw new OutputException('unknown javascript object type');
             }
         default:

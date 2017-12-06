@@ -31,7 +31,8 @@
         "prepublishOnly": "npm test"
     },
     "dependencies": {
-        "arraybuffer-to-buffer": "^0.0.4"
+        "arraybuffer-to-buffer": "^0.0.4",
+        "typedarray-to-buffer": "^3.1.2"
     },
     "devDependencies": {
         "@angular/compiler": "^4.4.6",
