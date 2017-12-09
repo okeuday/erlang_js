@@ -9,10 +9,11 @@ node_js:
   - "0.12"
 branches:
   only:
-    - master
+  - gh-pages
+  - /.*/
 notifications:
-  irc:
-    channels:
-      - "chat.freenode.net#cloudi"
+  email:
+    recipients:
+      - aabbcc1241@yahoo.com.hk
     on_success: change
     on_failure: always
