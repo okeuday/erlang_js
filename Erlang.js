@@ -30,6 +30,8 @@ var Erlang = this; // namespace
 var zlib = require('zlib');
 var lib = require('./lib');
 
+Erlang.undefinedAtom = 'undefined';
+
 // tag values here http://www.erlang.org/doc/apps/erts/erl_ext_dist.html
 var TAG_VERSION = 131;
 var TAG_COMPRESSED_ZLIB = 80;
@@ -892,7 +894,7 @@ Erlang._term_to_binary = function _term_to_binary (term) {
                     throw new OutputException('unknown javascript object type');
             }
         case 'undefined':
-            return (new Erlang.OtpErlangAtom('nil')).binary();
+            return (new Erlang.OtpErlangAtom(Erlang.undefinedAtom)).binary();
         default:
             throw new OutputException('unknown javascript type');
     }
