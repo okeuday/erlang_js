@@ -879,6 +879,8 @@ Erlang._term_to_binary = function _term_to_binary (term) {
                 default:
                     throw new OutputException('unknown javascript object type');
             }
+        case 'undefined':
+            return (new Erlang.OtpErlangAtom('nil')).binary();
         default:
             throw new OutputException('unknown javascript type');
     }
