@@ -849,7 +849,7 @@ var hex = function hex(buffer) {
             assert.equal(binary.toString('binary'), '\x83k\0\4test');
         });
     }).call(this);
-    (function test_term_to_binary_boolean () {
+    (function test_term_to_binary_predefined_atom () {
         Erlang.term_to_binary(true, function(err, binary) {
             assert.strictEqual(err, undefined);
             assert.equal(binary.toString('binary'), '\x83s\4true');
