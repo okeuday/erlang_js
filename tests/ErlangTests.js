@@ -858,6 +858,10 @@ var hex = function hex(buffer) {
             assert.strictEqual(err, undefined);
             assert.equal(binary.toString('binary'), '\x83s\5false');
         });
+        Erlang.term_to_binary(undefined, function(err, binary) {
+            assert.strictEqual(err, undefined);
+            assert.equal(binary.toString('binary'), '\x83s\x09undefined');
+        });
     }).call(this);
     (function test_term_to_binary_short_integer () {
         Erlang.term_to_binary(0, function(err, binary) {
