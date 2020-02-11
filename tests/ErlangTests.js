@@ -61,14 +61,11 @@ var hex = function hex(buffer) {
     return output;
 };
 var bufferFrom;
-var bufferAlloc;
 if (Erlang.nodejs_version_after('5.10.0',true)) {
     bufferFrom = Buffer.from;
-    bufferAlloc = Buffer.alloc;
 }
 else {
     bufferFrom = Buffer;
-    bufferAlloc = Buffer;
 }
 
 (function AtomTestCase () {
