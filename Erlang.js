@@ -62,7 +62,34 @@ var TAG_FUN_EXT = 117;
 var TAG_ATOM_UTF8_EXT = 118;
 var TAG_SMALL_ATOM_UTF8_EXT = 119;
 
+var nodejs_version = process.versions['node'].split('.').map(function (s) {
+    return parseInt(s);
+});
+Erlang.nodejs_version_after = function nodejs_version_after (s, include) {
+    var v = s.split('.').map(function (s) {
+        return parseInt(s);
+    });
+    for (var i = 0; i < v.length; i++) {
+        if (nodejs_version[i] > v[i]) {
+            return true;
+        }
+        if (nodejs_version[i] < v[i]) {
+            return false;
+        }
+    }
+    return include;
+};
 var toNativeString = {}.toString;
+var bufferFrom;
+var bufferAlloc;
+if (Erlang.nodejs_version_after('5.10.0',true)) {
+    bufferFrom = Buffer.from;
+    bufferAlloc = Buffer.alloc;
+}
+else {
+    bufferFrom = Buffer;
+    bufferAlloc = Buffer;
+}
 var packUint16 = function packUint16 (value, i, buffer) { // big endian
     buffer[i] = (value >>> 8) & 0xff;
     buffer[i + 1] = value & 0xff;
@@ -85,33 +112,6 @@ var unpackUint32 = function unpackUint32 (i, buffer) { // big endian
            (buffer[i + 2] << 8) |
            buffer[i + 3];
 };
-var nodejs_version = process.versions['node'].split('.').map(function (s) {
-    return parseInt(s);
-});
-Erlang.nodejs_version_after = function nodejs_version_after (s, include) {
-    var v = s.split('.').map(function (s) {
-        return parseInt(s);
-    });
-    for (var i = 0; i < v.length; i++) {
-        if (nodejs_version[i] > v[i]) {
-            return true;
-        }
-        if (nodejs_version[i] < v[i]) {
-            return false;
-        }
-    }
-    return include;
-};
-var bufferFrom;
-var bufferAlloc;
-if (Erlang.nodejs_version_after('5.10.0',true)) {
-    bufferFrom = Buffer.from;
-    bufferAlloc = Buffer.alloc;
-}
-else {
-    bufferFrom = Buffer;
-    bufferAlloc = Buffer;
-}
 
 // Exception objects listed alphabetically
 

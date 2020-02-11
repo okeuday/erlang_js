@@ -33,6 +33,13 @@ var assert = require('assert');
 // to make the tests more exhaustive
 
 var toNativeString = {}.toString;
+var bufferFrom;
+if (Erlang.nodejs_version_after('5.10.0',true)) {
+    bufferFrom = Buffer.from;
+}
+else {
+    bufferFrom = Buffer;
+}
 String.prototype.repeat = function(i) {
     return new Array(i + 1).join(this);
 };
@@ -60,13 +67,6 @@ var hex = function hex(buffer) {
     }
     return output;
 };
-var bufferFrom;
-if (Erlang.nodejs_version_after('5.10.0',true)) {
-    bufferFrom = Buffer.from;
-}
-else {
-    bufferFrom = Buffer;
-}
 
 (function AtomTestCase () {
     (function test_atom () {
