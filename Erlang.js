@@ -85,9 +85,13 @@ var unpackUint32 = function unpackUint32 (i, buffer) { // big endian
            (buffer[i + 2] << 8) |
            buffer[i + 3];
 };
-var nodejs_version = process.versions['node'].split('.').map(s => parseInt(s));
+var nodejs_version = process.versions['node'].split('.').map(function (s) {
+    parseInt(s)
+});
 Erlang.nodejs_version_after = function nodejs_version_after (s, include) {
-    var v = s.split('.').map(s => parseInt(s));
+    var v = s.split('.').map(function (s) {
+        parseInt(s)
+    });
     for (var i = 0; i < v.length; i++) {
         if (nodejs_version[i] > v[i]) {
             return true;
