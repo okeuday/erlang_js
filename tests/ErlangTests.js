@@ -892,6 +892,11 @@ var hex = function hex(buffer) {
             assert.strictEqual(err, undefined);
             assert.equal(binary.toString('binary'), '\x83s\4test');
         });
+        Erlang.term_to_binary(new Erlang.OtpErlangAtomLarge('test', false),
+                              function(err, binary) {
+            assert.strictEqual(err, undefined);
+            assert.equal(binary.toString('binary'), '\x83d\0\4test');
+        });
     }).call(this);
     (function test_term_to_binary_string_basic () {
         Erlang.term_to_binary('', function(err, binary) {

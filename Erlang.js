@@ -194,7 +194,7 @@ Erlang.OtpErlangAtom.prototype.binary = function() {
     else if (typeof this.value == 'string') {
         var length = this.value.length;
         if (this.utf8) {
-            if (length <= 255) {
+            if (length <= 255 && !this.force_large) {
                 var buffer = new bufferAlloc(2 + length);
                 buffer[0] = TAG_SMALL_ATOM_UTF8_EXT;
                 buffer[1] = length;
@@ -213,7 +213,7 @@ Erlang.OtpErlangAtom.prototype.binary = function() {
             }
         }
         else {
-            if (length <= 255) {
+            if (length <= 255 && !this.force_large) {
                 var buffer = new bufferAlloc(2 + length);
                 buffer[0] = TAG_SMALL_ATOM_EXT;
                 buffer[1] = length;
@@ -238,6 +238,17 @@ Erlang.OtpErlangAtom.prototype.binary = function() {
 };
 Erlang.OtpErlangAtom.prototype.toString = function() {
     return 'OtpErlangAtom(' + this.value + ',' + this.utf8 + ')';
+};
+
+Erlang.OtpErlangAtomLarge = function OtpErlangAtomLarge (value, utf8) {
+    this.value = value;
+    this.force_large = true;
+    this.utf8 = typeof utf8 !== 'undefined' ? utf8 : false;
+};
+
+Erlang.OtpErlangAtomLarge.prototype.binary = Erlang.OtpErlangAtom.prototype.binary;
+Erlang.OtpErlangAtomLarge.prototype.toString = function() {
+    return 'OtpErlangAtomLarge(' + this.value + ',' + this.utf8 + ')';
 };
 
 Erlang.OtpErlangBinary = function OtpErlangBinary (value, bits) {
@@ -971,6 +982,7 @@ Erlang._term_to_binary = function _term_to_binary (term) {
                     return Erlang._tuple_to_binary(term);
                 case '[object Object]':
                     if (term instanceof Erlang.OtpErlangAtom ||
+                        term instanceof Erlang.OtpErlangAtomLarge ||
                         term instanceof Erlang.OtpErlangList ||
                         term instanceof Erlang.OtpErlangBinary ||
                         term instanceof Erlang.OtpErlangFunction ||
