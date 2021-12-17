@@ -194,7 +194,7 @@ Erlang.OtpErlangAtom.prototype.binary = function() {
     else if (typeof this.value == 'string') {
         var length = this.value.length;
         if (this.utf8) {
-            if (length <= 255 && !this.force_large) {
+            if (length <= 255) {
                 var buffer = new bufferAlloc(2 + length);
                 buffer[0] = TAG_SMALL_ATOM_UTF8_EXT;
                 buffer[1] = length;
@@ -213,7 +213,7 @@ Erlang.OtpErlangAtom.prototype.binary = function() {
             }
         }
         else {
-            if (length <= 255 && !this.force_large) {
+            if (length <= 255) {
                 var buffer = new bufferAlloc(2 + length);
                 buffer[0] = TAG_SMALL_ATOM_EXT;
                 buffer[1] = length;
@@ -242,11 +242,40 @@ Erlang.OtpErlangAtom.prototype.toString = function() {
 
 Erlang.OtpErlangAtomLarge = function OtpErlangAtomLarge (value, utf8) {
     this.value = value;
-    this.force_large = true;
     this.utf8 = typeof utf8 !== 'undefined' ? utf8 : false;
 };
-
-Erlang.OtpErlangAtomLarge.prototype.binary = Erlang.OtpErlangAtom.prototype.binary;
+Erlang.OtpErlangAtomLarge.prototype.binary = function() {
+    if (typeof this.value == 'string') {
+        var length = this.value.length;
+        if (this.utf8) {
+            if (length <= 65535) {
+                var buffer = new bufferAlloc(3 + length);
+                buffer[0] = TAG_ATOM_UTF8_EXT;
+                packUint16(length, 1, buffer);
+                buffer.write(this.value, 3, length, 'binary');
+                return buffer;
+            }
+            else {
+                throw new OutputException('uint16 overflow');
+            }
+        }
+        else {
+            if (length <= 65535) {
+                var buffer = new bufferAlloc(3 + length);
+                buffer[0] = TAG_ATOM_EXT;
+                packUint16(length, 1, buffer);
+                buffer.write(this.value, 3, length, 'binary');
+                return buffer;
+            }
+            else {
+                throw new OutputException('uint16 overflow');
+            }
+        }
+    }
+    else {
+        throw new OutputException('unknown atom type');
+    }
+};
 Erlang.OtpErlangAtomLarge.prototype.toString = function() {
     return 'OtpErlangAtomLarge(' + this.value + ',' + this.utf8 + ')';
 };
