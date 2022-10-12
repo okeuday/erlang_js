@@ -1,7 +1,7 @@
 Erlang External Term Format for Javascript
 ==========================================
 
-[![Build Status](https://secure.travis-ci.org/okeuday/erlang_js.png?branch=master)](http://travis-ci.org/okeuday/erlang_js)
+[![Build Status](https://app.travis-ci.com/okeuday/erlang_js.svg?branch=master)](https://app.travis-ci.com/okeuday/erlang_js)
 [![npm Package Version](https://img.shields.io/npm/v/erlang_js.svg?maxAge=2592000)](https://www.npmjs.com/package/erlang_js)
 
 Provides all encoding and decoding for the Erlang External Term Format
