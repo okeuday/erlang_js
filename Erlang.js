@@ -1125,7 +1125,7 @@ Erlang._object_to_binary = function _object_to_binary (map) {
     var buffers = [];
     switch (toNativeString.call(map)) {
         case '[object Map]':
-            map.forEach((value, key) => {
+            map.forEach(function (value, key) {
                 length++;
                 buffers.push(Erlang._term_to_binary(key));
                 buffers.push(Erlang._term_to_binary(value));
