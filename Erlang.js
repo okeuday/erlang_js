@@ -433,12 +433,12 @@ Erlang.OtpErlangPort = function OtpErlangPort (node, id, creation) {
 };
 Erlang.OtpErlangPort.prototype.binary = function() {
     var id_size = this.id.length;
-    var creation_size = this.creation.length;
     if (id_size == 8) {
         return Buffer.concat([new bufferFrom([TAG_V4_PORT_EXT]),
                               this.node.binary(), this.id, this.creation]);
     }
-    else if (creation_size == 4) {
+    var creation_size = this.creation.length;
+    if (creation_size == 4) {
         return Buffer.concat([new bufferFrom([TAG_NEW_PORT_EXT]),
                               this.node.binary(), this.id, this.creation]);
     }
